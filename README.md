@@ -6,7 +6,7 @@ This code example has a three project structure: CM33 secure, CM33 non-secure, a
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc-edge-btstack-periodic-adv)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDE4NjQiLCJTcGVjIE51bWJlciI6IjAwMi00MTg2NCIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBCbHVldG9vdGgmcmVnOyBMRSBwZXJpb2RpYyBhZHZlcnRpc2VtZW50IiwicmlkIjoic3VyZXNoa3VtYXJhIiwiRG9jIHZlcnNpb24iOiIyLjAuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyNDE4NjQiLCJTcGVjIE51bWJlciI6IjAwMi00MTg2NCIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBCbHVldG9vdGgmcmVnOyBMRSBwZXJpb2RpYyBhZHZlcnRpc2VtZW50IiwicmlkIjoic3VyZXNoa3VtYXJhIiwiRG9jIHZlcnNpb24iOiIyLjAuMSIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 See the [Design and implementation](docs/design_and_implementation.md) for the functional description of this code example.
 
@@ -57,13 +57,13 @@ This example requires no additional software or tools.
 
 ## Configuration parameters
 
-Parameter         | Value 
---------------------|--------------
-Extended advertisement minimum/maximum interval | 500 ms
-Extended advertisement channel map | 37, 38, 39
-Periodic advertisement minimum/maximum interval | 500 ms
-Periodic data | Five seconds to change the periodic data (this data is simulating the user data)
-Fixed advertisement device address | 20:82:9B:01:22:33
+| Parameter                          | Value              |
+|------------------------------------|--------------------|
+| Extended advertisement minimum/maximum interval | 500 ms |
+| Extended advertisement channel map  | 37, 38, 39        |
+| Periodic advertisement minimum/maximum interval | 500 ms |
+| Periodic data                      | Five seconds      |
+| Fixed advertisement device address  | 20:82:9B:01:22:33 |
 
 
 ## Operation
@@ -96,9 +96,9 @@ This code example requires you to program the [PSOC&trade; Edge MCU: Bluetooth&r
 2. Delete **retarget_io** library from the mtb-shared folder using Library Manager tool.
 
 3. Navigate to the application *Makefile* inside the *proj_cm33_ns*. Find the *Makefile* variable `ENABLE_SPY_TRACES` and set it to the value *1* as shown:
-    ```
-    ENABLE_SPY_TRACES = 1
-    ```
+```
+ENABLE_SPY_TRACES = 1
+```
 4. Open Device Configurator from the Quick Panel and make the following modifications for **Serial Communication Block (SCB) 2** (under **Peripheral** section) as shown in **Figure 3**
       - Change the **Oversample** value to '8'
       - Select **Enable flow control** to turn on flow control
@@ -127,9 +127,9 @@ This code example requires you to program the [PSOC&trade; Edge MCU: Bluetooth&r
 
 9. For more traces, call the following function in `application main()`
 
-   ```
-   cybt_platform_set_trace_level(CYBT_TRACE_ID_STACK,CYBT_TRACE_LEVEL_DEBUG);
-   ```
+```
+cybt_platform_set_trace_level(CYBT_TRACE_ID_STACK,CYBT_TRACE_LEVEL_DEBUG);
+```
    This function is defined in *cybt_platform_trace.c* in [btstack-integration](https://github.com/Infineon/btstack-integration) <br>
    Set the trace category ID and trace level as per the requirement
 
@@ -143,61 +143,57 @@ Perform the below steps additionally for other code examples. This is already im
 
 2. Add the below code in the main.c file of CM33_NS project by replacing the existing retarget_io initialization.
 
-   ``` 
-   #ifdef ENABLE_BT_SPY_LOG
-   #include "cybt_debug_uart.h"
-   #endif 
+``` 
+#ifdef ENABLE_BT_SPY_LOG
+#include "cybt_debug_uart.h"
+#endif 
 
-   #ifdef ENABLE_BT_SPY_LOG
-   {
-      cybt_debug_uart_config_t config =
-      {
-         .baud_rate = DEBUG_UART_BAUDRATE,
-         .flow_control = TRUE
-      };
-      cybt_debug_uart_init(&config, NULL);
-   }
-   #else
-   {
-      /* Initialize retarget-io middleware */
-      init_retarget_io();
-   }
-   #endif
-   ```
+#ifdef ENABLE_BT_SPY_LOG
+cybt_debug_uart_config_t config =
+{
+   .baud_rate = DEBUG_UART_BAUDRATE,
+   .flow_control = TRUE
+};
+cybt_debug_uart_init(&config, NULL);
+#else
+/* Initialize retarget-io middleware */
+init_retarget_io();
+#endif
+```
  
 3. Add the below code in event_handler implementation file. In this case it is app_bt_event_handler.c file
 
-   ```
-   #ifdef ENABLE_BT_SPY_LOG
-   #include "cybt_debug_uart.h"
-   #endif
+```
+#ifdef ENABLE_BT_SPY_LOG
+#include "cybt_debug_uart.h"
+#endif
 
-   #ifdef ENABLE_BT_SPY_LOG
-   void hci_trace_cback(wiced_bt_hci_trace_type_t type, uint16_t length, 
-   uint8_t* p_data)
-   {
-      cybt_debug_uart_send_hci_trace(type, length, p_data);
-   }
-   #endif
+#ifdef ENABLE_BT_SPY_LOG
+void hci_trace_cback(wiced_bt_hci_trace_type_t type, uint16_t length, 
+uint8_t* p_data)
+{
+   cybt_debug_uart_send_hci_trace(type, length, p_data);
+}
+#endif
 
-   /* place the below code inside app_bt_application_init()   
-     or similar function */
+/* place the below code inside app_bt_application_init()   
+   or similar function */
 
-      #ifdef ENABLE_BT_SPY_LOG
-      wiced_bt_dev_register_hci_trace(hci_trace_cback);
-      #endif
-   ```
+#ifdef ENABLE_BT_SPY_LOG
+wiced_bt_dev_register_hci_trace(hci_trace_cback);
+#endif
+```
 4. Add the below define in the makefile of CM33_NS project. 
 
-   ```
-   # Optionally enable app and Bluetooth protocol traces and route to BTSpy
-   ENABLE_SPY_TRACES = 1
-   ifeq ($(ENABLE_SPY_TRACES),1)
-   DEFINES+=ENABLE_BT_SPY_LOG DEBUG_UART_BAUDRATE=3000000
-   else
-   DEFINES+=ENABLE_AIROC_HCI_TRANSPORT_PRINTF=0
-   endif
-   ```
+```
+# Optionally enable app and Bluetooth protocol traces and route to BTSpy
+ENABLE_SPY_TRACES = 1
+ifeq ($(ENABLE_SPY_TRACES),1)
+DEFINES+=ENABLE_BT_SPY_LOG DEBUG_UART_BAUDRATE=3000000
+else
+DEFINES+=ENABLE_AIROC_HCI_TRANSPORT_PRINTF=0
+endif
+```
    
    
 ## Resources and settings
@@ -236,6 +232,7 @@ Document title: *CE241864* – *PSOC&trade; Edge MCU: Bluetooth&reg; LE periodic
  ------- | ---------------------
  1.x.0   | New code example <br> Early access release
  2.0.0   | GitHub release
+ 2.0.1   | Updated README.md
 <br>
 
 
